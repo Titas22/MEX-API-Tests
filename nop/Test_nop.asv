@@ -1,0 +1,35 @@
+clc
+clearvars
+
+n = 1e5;
+
+t = zeros(3, 1);
+for ii = 1 : n
+    %% Empty()
+    ts = tic();
+    nop();
+    t(1) = t(1) + toc(ts);
+    
+    %% C MEX Empty()
+    ts = tic();
+    Cnop();
+    t(2) = t(2) + toc(ts);
+    
+    %% C++ MEX nop()
+    ts = tic();
+    Cppnop();
+    t(3) = t(3) + toc(ts);
+    
+    %% C++ MEX nop(), C API
+    ts = tic();
+    Cppnop2();
+    t(4) = t(4) + toc(ts);
+end
+
+fprintf('    nop() x%d   |   %8.4fms   |   %6.4fus/call   |   %6.3fx\n', n, t(1)*1e3, t(1)/n*1e6, 1.0);
+fprintf('   Cnop() x%d   |   %8.4fms   |   %6.4fus/call   |   %6.3fx\n', n, t(2)*1e3, t(2)/n*1e6, t(2) / t(1));
+fprintf(' Cppnop() x%d   |   %8.4fms   |   %6.4fus/call   |   %6.3fx\n', n, t(3)*1e3, t(3)/n*1e6, t(3) / t(1));
+
+
+function nop()
+end
